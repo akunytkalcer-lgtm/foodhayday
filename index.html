@@ -3,83 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Hay Day Store - Layanan Item & Mesin Hay Day</title>
+  <title>Hay Day Store - Layanan Item & Food</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header class="navbar">
+  <!-- Header -->
+  <header class="header">
     <div class="logo">
-      <h1>🌾 HayDay Store</h1>
-      <p>Penyedia Food & Item Hay Day Terpercaya</p>
+      <h1>🌾 HAY DAY STORE</h1>
+      <p>Pusat Jual Beli Food & Item Hay Day Murah & Cepat</p>
     </div>
-    <a href="https://wa.me/6287888307856" target="_blank" class="btn-wa-header">💬 Chat WA Admin</a>
   </header>
 
-  <main class="container">
+  <!-- Container Utama -->
+  <div class="container">
 
-    <section class="banner">
-      <h2>Pesan Food & Item Hay Day Mudah & Cepat!</h2>
-      <p>Pilih item yang kamu butuhkan, atur jumlahnya, lalu klik checkout untuk terhubung langsung dengan Admin.</p>
-    </section>
+    <!-- Katalog Produk -->
+    <h2 class="section-title">🛒 Pilihan Item & Food</h2>
+    <div class="product-grid" id="productGrid">
+      <!-- Diisi otomatis oleh JS -->
+    </div>
 
-    <section class="catalog-section">
-      <h3>🛒 Katalog Food & Item</h3>
-      <div class="product-grid" id="productGrid">
-        </div>
-    </section>
-
-    <section class="cart-section">
-      <h3>📋 Rincian Pesanan Kamu</h3>
-      
-      <div class="cart-box">
-        <table class="cart-table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Jumlah</th>
-              <th>Harga</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="cartItems">
-            <tr>
-              <td colspan="4" style="text-align: center; color: #888;">Keranjang masih kosong. Silakan pilih item di atas.</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="cart-summary">
-          <h4>Total Pesanan: <span id="totalPrice">Rp 0</span></h4>
-        </div>
-
-        <form id="orderForm" class="order-form">
-          <h4>Data Pemesan:</h4>
-          <div class="form-group">
-            <label for="buyerName">Nama / Nickname Game:</label>
-            <input type="text" id="buyerName" placeholder="Contoh: Budi Hayday" required>
-          </div>
-          <div class="form-group">
-            <label for="buyerTag">Tag Tagih / Kode Pertanian (#Tag):</label>
-            <input type="text" id="buyerTag" placeholder="Contoh: #PY2089L" required>
-          </div>
-          <button type="submit" class="btn-checkout">🚀 Checkout via WhatsApp</button>
-        </form>
+    <!-- Ringkasan Order -->
+    <div class="cart-card">
+      <h3>📋 Detail Pesanan</h3>
+      <div id="cartList" class="cart-list">
+        <p class="empty-text">Pilih produk di atas untuk menambahkan ke pesanan.</p>
       </div>
-    </section>
 
-  </main>
+      <div class="cart-total">
+        <span>Total Estimasi:</span>
+        <strong id="totalPrice">Rp 0</strong>
+      </div>
+
+      <!-- Form Pemesan -->
+      <form id="orderForm" class="order-form">
+        <div class="form-group">
+          <label>Nama / Nickname Game</label>
+          <input type="text" id="buyerName" placeholder="Masukkan nama kamu" required>
+        </div>
+        <div class="form-group">
+          <label>Tag Farm (#Kode Pertanian)</label>
+          <input type="text" id="buyerTag" placeholder="Contoh: #P920YYL" required>
+        </div>
+
+        <button type="submit" class="btn-wa">
+          <span>💬 Order via WhatsApp</span>
+        </button>
+      </form>
+    </div>
+
+  </div>
 
   <footer>
-    <p>&copy; 2026 Food Hay Day Store | WhatsApp Admin: 0878-8830-7856</p>
+    <p>&copy; 2026 Food Hay Day | WA: 0878-8830-7856</p>
   </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-        <p>&copy; 2026 Pasar Petani Premium. Untuk tujuan demonstrasi.</p>
-    </footer>
-
-</body>
-</html>
-
