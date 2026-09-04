@@ -30,7 +30,7 @@
                     <input type="file" id="banner-file" accept="image/*" required 
                         class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
                 </div>
-                <button type="submit" class="w-full bg-[#ff9800] text-white font-black py-2 rounded-xl uppercase border-b-2 border-[#d87200] active:translate-y-0.5">
+                <button type="submit" id="btn-banner" class="w-full bg-[#ff9800] text-white font-black py-2 rounded-xl uppercase border-b-2 border-[#d87200] active:translate-y-0.5">
                     <i class="fa-solid fa-image mr-1"></i> Simpan Banner Toko
                 </button>
             </form>
@@ -43,27 +43,19 @@
             <form id="form-tambah" class="space-y-2 text-[11px]">
                 <div>
                     <label class="block font-bold text-[#725e42]">Nama Item</label>
-                    <input type="text" id="nama" placeholder="Contoh: Gula Merah / Mesin Roti" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                    <input type="text" id="nama" placeholder="Contoh: Eskrim Vanilla" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block font-bold text-[#725e42]">Kategori</label>
-                        <input type="text" id="kategori" placeholder="Contoh: Gula, Roti" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                        <input type="text" id="kategori" placeholder="Contoh: Eskrim, Roti" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
                     </div>
                     
-                    <!-- JENIS: DENGAN TOMBOL PILIHAN LANGSUNG (TANPA POP-UP BROWSER) -->
+                    <!-- JENIS: DIBUAT INPUT TEKS BEBAS AGAR BISA DIPAKAI BUAT JENIS APA SAJA -->
                     <div>
-                        <label class="block font-bold text-[#725e42] mb-1">Jenis</label>
-                        <div class="flex gap-1">
-                            <label class="flex-1 bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl flex items-center justify-center gap-1 cursor-pointer font-bold text-[10px] text-[#5c4a38]">
-                                <input type="radio" name="jenis_radio" value="food" checked onchange="document.getElementById('jenis').value=this.value"> Food
-                            </label>
-                            <label class="flex-1 bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl flex items-center justify-center gap-1 cursor-pointer font-bold text-[10px] text-[#5c4a38]">
-                                <input type="radio" name="jenis_radio" value="machine" onchange="document.getElementById('jenis').value=this.value"> Machine
-                            </label>
-                        </div>
-                        <input type="hidden" id="jenis" value="food">
+                        <label class="block font-bold text-[#725e42]">Jenis</label>
+                        <input type="text" id="jenis" placeholder="Contoh: food, machine, alat" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
                     </div>
                 </div>
 
@@ -78,14 +70,13 @@
                     </div>
                 </div>
 
-                <!-- UPLOAD FOTO PRODUK DARI GALERI -->
                 <div>
                     <label class="block font-bold text-[#725e42]">Upload Foto Produk</label>
                     <input type="file" id="gambar-file" accept="image/*" required 
                         class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
                 </div>
 
-                <button type="submit" class="w-full bg-[#6bb962] text-white font-black py-2.5 rounded-xl uppercase border-b-4 border-[#4a8d42] active:translate-y-0.5 mt-2">
+                <button type="submit" id="btn-simpan" class="w-full bg-[#6bb962] text-white font-black py-2.5 rounded-xl uppercase border-b-4 border-[#4a8d42] active:translate-y-0.5 mt-2">
                     <i class="fa-solid fa-plus mr-1"></i> Simpan Item
                 </button>
             </form>
