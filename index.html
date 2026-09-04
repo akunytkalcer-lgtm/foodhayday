@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hay Day Food List</title>
     
-    <!-- Tailwind CSS (Framework UI) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- FontAwesome (Icon) -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
@@ -24,7 +24,7 @@
 
         <!-- 1. GAMBAR TOKO (HEADER BANNER) -->
         <div class="hayday-section-card p-3 text-center overflow-hidden">
-            <div class="relative w-full h-32 rounded-2xl overflow-hidden border-2 border-[#ded7b8] mb-2">
+            <div class="relative w-full h-32 rounded-2xl overflow-hidden border-2 border-[#ded7b8] mb-2 bg-[#f9f6ef]">
                 <img id="gambar-toko" src="https://via.placeholder.com/400x150?text=Header+Toko+Hay+Day" alt="Gambar Toko" class="w-full h-full object-cover">
             </div>
             <h1 class="font-black text-[#5c4a38] text-sm uppercase tracking-wider">Hay Day Food List</h1>
@@ -45,37 +45,35 @@
             <div>
                 <label class="block text-[10px] font-black text-[#725e42] uppercase mb-1.5 px-1">Kategori Produk</label>
                 <div class="overflow-x-auto flex gap-2 no-scrollbar py-1" id="kategori-wrapper">
-                    <button type="button" class="btn-kategori active-kat flex-none uppercase">Semua</button>
-                    <!-- Kategori lain akan dimuat otomatis oleh JS -->
+                    <!-- Kategori dimuat otomatis oleh JS -->
                 </div>
             </div>
 
-            <!-- BARIS FILTER: ALL MACHINE, LEVEL, & RESET -->
-            <div class="grid grid-cols-3 gap-2 pt-1 border-t border-[#ded7b8]">
-                
-                <!-- 4. ALL MACHINE -->
+            <!-- 4. FILTER LEVEL (UX BARU: TOMBOL SCROLL KIRI-KANAN, TANPA POP-UP) -->
+            <div>
+                <label class="block text-[10px] font-black text-[#725e42] uppercase mb-1.5 px-1">Filter Level</label>
+                <div class="overflow-x-auto flex gap-1.5 no-scrollbar py-1" id="level-wrapper">
+                    <button type="button" onclick="selectLevel('')" class="btn-level flex-none px-2.5 py-1 text-[9px] font-black rounded-lg border border-[#ded7b8] bg-white text-[#725e42] uppercase active-level">Semua</button>
+                    <button type="button" onclick="selectLevel('1-10')" class="btn-level flex-none px-2.5 py-1 text-[9px] font-black rounded-lg border border-[#ded7b8] bg-white text-[#725e42] uppercase">Lvl 1-10</button>
+                    <button type="button" onclick="selectLevel('11-30')" class="btn-level flex-none px-2.5 py-1 text-[9px] font-black rounded-lg border border-[#ded7b8] bg-white text-[#725e42] uppercase">Lvl 11-30</button>
+                    <button type="button" onclick="selectLevel('31-50')" class="btn-level flex-none px-2.5 py-1 text-[9px] font-black rounded-lg border border-[#ded7b8] bg-white text-[#725e42] uppercase">Lvl 31-50</button>
+                    <button type="button" onclick="selectLevel('51+')" class="btn-level flex-none px-2.5 py-1 text-[9px] font-black rounded-lg border border-[#ded7b8] bg-white text-[#725e42] uppercase">Lvl 51+</button>
+                </div>
+            </div>
+
+            <!-- 5. BARIS KONTROL: MESIN & RESET -->
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-[#ded7b8]">
                 <button type="button" id="btn-machine" class="btn-kategori w-full text-center py-2 px-1 text-[9px] uppercase">
-                    <i class="fa-solid fa-gear mr-1"></i> Machine
+                    <i class="fa-solid fa-gear mr-1"></i> Khusus Machine
                 </button>
 
-                <!-- 5. LEVEL FILTER -->
-                <select id="select-level" class="bg-white border-2 border-[#ded7b8] text-[#725e42] text-[10px] font-black rounded-xl px-2 py-2 focus:outline-none focus:border-[#ff9800]">
-                    <option value="">Semua Level</option>
-                    <option value="1-10">Lvl 1 - 10</option>
-                    <option value="11-30">Lvl 11 - 30</option>
-                    <option value="31-50">Lvl 31 - 50</option>
-                    <option value="51+">Lvl 51+</option>
-                </select>
-
-                <!-- 6. RESET FILTER -->
                 <button type="button" id="btn-reset" class="bg-[#e53935] text-white font-black text-[9px] py-2 px-1 rounded-xl uppercase border-b-2 border-[#b71c1c] active:translate-y-0.5 flex items-center justify-center gap-1 shadow-sm">
-                    <i class="fa-solid fa-rotate-left"></i> Reset
+                    <i class="fa-solid fa-rotate-left"></i> Reset Filter
                 </button>
             </div>
 
-            <!-- DAFTAR PRODUK / MESHIN (GRID) -->
+            <!-- DAFTAR PRODUK / MESIN (GRID) -->
             <div class="grid grid-cols-2 gap-3 pt-2" id="produk-wrapper">
-                <!-- Status loading saat menunggu JS/JSON -->
                 <div class="col-span-2 text-center py-10 bg-white rounded-2xl border border-[#ded7b8]">
                     <i class="fa-solid fa-spinner animate-spin text-[#8c785c] text-2xl mb-2 block"></i>
                     <p class="text-xs font-black text-[#725e42] uppercase">Memuat Data...</p>
@@ -93,7 +91,7 @@
 
     </main>
 
-    <!-- JS Utama -->
-    <script src="js/main.js"></script>
+    <!-- JS Utama dengan versi pemutus cache -->
+    <script src="js/main.js?v=3"></script>
 </body>
 </html>
