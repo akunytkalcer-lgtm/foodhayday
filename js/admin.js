@@ -1,8 +1,34 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadDaftarAdmin();
 
-    document.getElementById("form-tambah").addEventListener("submit", function (e) {
+    // HANDLER SIMPAN BANNER TOKO
+    document.getElementById("form-banner").addEventListener("submit", async function (e) {
         e.preventDefault();
+        const file = document.getElementById("banner-file").files[0];
+        if (!file) return;
+
+        try {
+            const bannerBase64 = await convertFileToBase64(file);
+            localStorage.setItem("hayday_banner", bannerBase64);
+            alert("Banner toko berhasil diperbarui!");
+        } catch (error) {
+            alert("Ukuran gambar banner terlalu besar!");
+        }
+    });
+
+    // HANDLER TAMBAH PRODUK
+    document.getElementById("form-tambah").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const fileInput = document.getElementById("gambar-file");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Pilih foto terlebih dahulu!");
+            return;
+        }
+
+        const gambarBase64 = await convertFileToBase64(file);
 
         const itemBaru = {
             id: Date.now(),
@@ -11,18 +37,31 @@ document.addEventListener("DOMContentLoaded", function () {
             jenis: document.getElementById("jenis").value,
             level: parseInt(document.getElementById("level").value),
             harga: parseInt(document.getElementById("harga").value),
-            gambar: document.getElementById("gambar").value.trim()
+            gambar: gambarBase64
         };
 
         let produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
         produkList.push(itemBaru);
-        localStorage.setItem("hayday_products", JSON.stringify(produkList));
 
-        this.reset();
-        loadDaftarAdmin();
-        alert("Item berhasil ditambahkan!");
+        try {
+            localStorage.setItem("hayday_products", JSON.stringify(produkList));
+            this.reset();
+            loadDaftarAdmin();
+            alert("Item & foto berhasil ditambahkan!");
+        } catch (error) {
+            alert("Penyimpanan penuh! Gunakan foto yang lebih kecil.");
+        }
     });
 });
+
+function convertFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
 
 function loadDaftarAdmin() {
     const wrapper = document.getElementById("admin-list-produk");
