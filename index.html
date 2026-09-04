@@ -1,109 +1,92 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasar Petani Hay Day - Premium</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Menambahkan Font Google untuk tampilan yang lebih bersih -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Hay Day Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <header class="navbar">
+    <h2>Hay Day Manager</h2>
+    <a href="https://wa.me/6287888307856" target="_blank" class="btn-wa">Chat WhatsApp</a>
+  </header>
+
+  <main class="container">
     
-    <!-- Bagian Header -->
-    <header>
-        <div class="header-content">
-            <h1>Pasar Petani Hay Day</h1>
-            <p>Paling banyak dibeli minggu ini</p>
-        </div>
-    </header>
-    
-    <!-- Bagian Grid Produk Utama -->
-    <main class="product-grid">
-        
-        <!-- Kartu Produk 1: Gula Putih -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <img src="path/to/your/sugar-image.png" alt="Karung Gula Putih Hay Day" class="product-image">
-            </div>
-            <div class="product-info">
-                <div class="product-header">
-                    <span class="product-category">Sugar Mill</span>
-                    <span class="product-level">Lv. 13+</span>
-                </div>
-                <h2 class="product-title">GULA PUTIH (1000 PCS)</h2>
-                <div class="product-details">
-                    <p class="product-price">Rp 5.000</p>
-                    <div class="product-stock status-low">
-                        <span class="status-dot"></span> Stok 10
-                    </div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn-detail">Detail</button>
-                    <button class="btn-add-cart">+ Keranjang</button>
-                </div>
-            </div>
-        </div>
+    <!-- Ringkasan Statistik -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Food</h3>
+        <p id="totalFood">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Mesin Produksi</h3>
+        <p id="totalMesin">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Level Tertinggi</h3>
+        <p id="maxLevel">Lvl 0</p>
+      </div>
+    </section>
 
-        <!-- Kartu Produk 2: Gula Putih 100 Pcs -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <img src="path/to/your/sugar-image.png" alt="Karung Gula Putih Hay Day" class="product-image">
-            </div>
-            <div class="product-info">
-                <div class="product-header">
-                    <span class="product-category">Sugar Mill</span>
-                    <span class="product-level">Lv. 13+</span>
-                </div>
-                <h2 class="product-title">GULA PUTIH (100 PCS)</h2>
-                <div class="product-details">
-                    <p class="product-price">Rp 700</p>
-                    <div class="product-stock status-full">
-                        <span class="status-dot"></span> Stok 100
-                    </div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn-detail">Detail</button>
-                    <button class="btn-add-cart">+ Keranjang</button>
-                </div>
-            </div>
+    <!-- Form Input Mesin -->
+    <section class="card">
+      <h3>Tambah / Input Mesin Produksi</h3>
+      <form id="machineForm">
+        <div class="form-group">
+          <label for="machineName">Kategori / Nama Mesin</label>
+          <input type="text" id="machineName" placeholder="Contoh: Bakery, Feed Mill" required>
         </div>
-
-        <!-- Kartu Produk 3: Gergaji -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <img src="path/to/your/saw-image.png" alt="Gergaji Tangan Hay Day" class="product-image">
-            </div>
-            <div class="product-info">
-                <div class="product-header">
-                    <span class="product-category">Supplies</span>
-                    <span class="product-level">Lv. 7+</span>
-                </div>
-                <h2 class="product-title">GERGAJI (1000 Pcs)</h2>
-                <div class="product-details">
-                    <p class="product-price">Rp 12.000</p> <!-- Misal harga upgraded -->
-                    <div class="product-stock status-low">
-                        <span class="status-dot"></span> Stok 5
-                    </div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn-detail">Detail</button>
-                    <button class="btn-add-cart">+ Keranjang</button>
-                </div>
-            </div>
+        <div class="form-group">
+          <label for="machineLevel">Input Level Mesin</label>
+          <input type="number" id="machineLevel" min="1" placeholder="Masukkan level mesin" required>
         </div>
+        <button type="submit" class="btn-primary">Tambah Mesin</button>
+      </form>
+    </section>
 
-        <!-- Kartu Produk 4: Gergaji 100 Pcs -->
-        <div class="product-card">
-            <div class="product-image-container">
-                <img src="path/to/your/saw-image.png" alt="Gergaji Tangan Hay Day" class="product-image">
-            </div>
-            <div class="product-info">
-                <div class="product-header">
-                    <span class="product-category">Supplies</span>
-                    <span class="product-level">Lv. 7+</span>
-                </div>
-                <h2 class="product-title">GERGAJI (100 Pcs)</h2>
+    <!-- Daftar Mesin (Urutan A-Z & Level) -->
+    <section class="card">
+      <h3>Daftar Mesin Produksi</h3>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Mesin (A-Z)</th>
+              <th>Level (Rendah → Tinggi)</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="machineList">
+            <!-- Data dimasukkan via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Tombol Checkout -->
+    <section class="checkout-section">
+      <button id="btnCheckout" class="btn-checkout">Cekout Ringkasan</button>
+    </section>
+
+  </main>
+
+  <!-- Modal / Tampilan JS Checkout -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2>Rincian Checkout</h2>
+      <hr>
+      <div id="checkoutDetails"></div>
+      <button id="btnConfirmWa" class="btn-primary" style="margin-top: 15px; width: 100%;">Kirim ke WhatsApp</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
                 <div class="product-details">
                     <p class="product-price">Rp 1.500</p> <!-- Misal harga upgraded -->
                     <div class="product-stock status-full">
