@@ -3,107 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Hay Day Calculator</title>
+  <title>Food Hay Day Store - Layanan Item & Mesin Hay Day</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="navbar">
-    <h2>Hay Day Manager</h2>
-    <a href="https://wa.me/6287888307856" target="_blank" class="btn-wa">Chat WhatsApp</a>
+    <div class="logo">
+      <h1>🌾 HayDay Store</h1>
+      <p>Penyedia Food & Item Hay Day Terpercaya</p>
+    </div>
+    <a href="https://wa.me/6287888307856" target="_blank" class="btn-wa-header">💬 Chat WA Admin</a>
   </header>
 
   <main class="container">
-    
-    <!-- Ringkasan Statistik -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <h3>Total Food</h3>
-        <p id="totalFood">0</p>
-      </div>
-      <div class="stat-card">
-        <h3>Mesin Produksi</h3>
-        <p id="totalMesin">0</p>
-      </div>
-      <div class="stat-card">
-        <h3>Level Tertinggi</h3>
-        <p id="maxLevel">Lvl 0</p>
-      </div>
+
+    <section class="banner">
+      <h2>Pesan Food & Item Hay Day Mudah & Cepat!</h2>
+      <p>Pilih item yang kamu butuhkan, atur jumlahnya, lalu klik checkout untuk terhubung langsung dengan Admin.</p>
     </section>
 
-    <!-- Form Input Mesin -->
-    <section class="card">
-      <h3>Tambah / Input Mesin Produksi</h3>
-      <form id="machineForm">
-        <div class="form-group">
-          <label for="machineName">Kategori / Nama Mesin</label>
-          <input type="text" id="machineName" placeholder="Contoh: Bakery, Feed Mill" required>
+    <section class="catalog-section">
+      <h3>🛒 Katalog Food & Item</h3>
+      <div class="product-grid" id="productGrid">
         </div>
-        <div class="form-group">
-          <label for="machineLevel">Input Level Mesin</label>
-          <input type="number" id="machineLevel" min="1" placeholder="Masukkan level mesin" required>
-        </div>
-        <button type="submit" class="btn-primary">Tambah Mesin</button>
-      </form>
     </section>
 
-    <!-- Daftar Mesin (Urutan A-Z & Level) -->
-    <section class="card">
-      <h3>Daftar Mesin Produksi</h3>
-      <div class="table-responsive">
-        <table>
+    <section class="cart-section">
+      <h3>📋 Rincian Pesanan Kamu</h3>
+      
+      <div class="cart-box">
+        <table class="cart-table">
           <thead>
             <tr>
-              <th>Nama Mesin (A-Z)</th>
-              <th>Level (Rendah → Tinggi)</th>
+              <th>Item</th>
+              <th>Jumlah</th>
+              <th>Harga</th>
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody id="machineList">
-            <!-- Data dimasukkan via JS -->
+          <tbody id="cartItems">
+            <tr>
+              <td colspan="4" style="text-align: center; color: #888;">Keranjang masih kosong. Silakan pilih item di atas.</td>
+            </tr>
           </tbody>
         </table>
-      </div>
-    </section>
 
-    <!-- Tombol Checkout -->
-    <section class="checkout-section">
-      <button id="btnCheckout" class="btn-checkout">Cekout Ringkasan</button>
+        <div class="cart-summary">
+          <h4>Total Pesanan: <span id="totalPrice">Rp 0</span></h4>
+        </div>
+
+        <form id="orderForm" class="order-form">
+          <h4>Data Pemesan:</h4>
+          <div class="form-group">
+            <label for="buyerName">Nama / Nickname Game:</label>
+            <input type="text" id="buyerName" placeholder="Contoh: Budi Hayday" required>
+          </div>
+          <div class="form-group">
+            <label for="buyerTag">Tag Tagih / Kode Pertanian (#Tag):</label>
+            <input type="text" id="buyerTag" placeholder="Contoh: #PY2089L" required>
+          </div>
+          <button type="submit" class="btn-checkout">🚀 Checkout via WhatsApp</button>
+        </form>
+      </div>
     </section>
 
   </main>
 
-  <!-- Modal / Tampilan JS Checkout -->
-  <div id="checkoutModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h2>Rincian Checkout</h2>
-      <hr>
-      <div id="checkoutDetails"></div>
-      <button id="btnConfirmWa" class="btn-primary" style="margin-top: 15px; width: 100%;">Kirim ke WhatsApp</button>
-    </div>
-  </div>
+  <footer>
+    <p>&copy; 2026 Food Hay Day Store | WhatsApp Admin: 0878-8830-7856</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-                <div class="product-details">
-                    <p class="product-price">Rp 1.500</p> <!-- Misal harga upgraded -->
-                    <div class="product-stock status-full">
-                        <span class="status-dot"></span> Stok 50
-                    </div>
-                </div>
-                <div class="product-actions">
-                    <button class="btn-detail">Detail</button>
-                    <button class="btn-add-cart">+ Keranjang</button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footer untuk info tambahan -->
-    <footer>
         <p>&copy; 2026 Pasar Petani Premium. Untuk tujuan demonstrasi.</p>
     </footer>
 
