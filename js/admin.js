@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     loadDaftarAdmin();
     updateAutoOptions();
 
-    // HANDLER TAMBAH PRODUK
     const formTambah = document.getElementById("form-tambah");
     if (formTambah) {
         formTambah.addEventListener("submit", async function (e) {
@@ -11,16 +10,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const fileInput = document.getElementById("gambar-file");
             const file = fileInput.files[0];
 
-            if (!file) return alert("Pilih foto terlebih dahulu!");
+            if (!file) return alert("Pilih foto produk terlebih dahulu!");
 
             btn.innerText = "Menyimpan...";
             btn.disabled = true;
 
             try {
+                // Konversi foto ke format Base64 (agar bisa disimpan lokal)
                 const gambarBase64 = await kompresGambar(file, 300, 0.7);
 
                 const itemBaru = {
-                    id: Date.now(),
+                    id: "item_" + Date.now(),
                     nama: document.getElementById("nama").value.trim(),
                     kategori: document.getElementById("kategori").value.trim(),
                     mesin: document.getElementById("mesin").value.trim(),
@@ -29,17 +29,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     gambar: gambarBase64
                 };
 
+                // Ambil data lama dari localStorage
                 let produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
                 produkList.push(itemBaru);
 
+                // Simpan kembali ke localStorage
                 localStorage.setItem("hayday_products", JSON.stringify(produkList));
+
                 this.reset();
-                
                 loadDaftarAdmin();
-                updateAutoOptions(); // Perbarui daftar otomatis
-                alert("Item berhasil ditambahkan!");
+                updateAutoOptions();
+                alert("Berhasil! Produk tersimpan dan akan muncul di Halaman Utama.");
             } catch (error) {
-                alert("Gagal menyimpan data!");
+                console.error(error);
+                alert("Gagal menyimpan gambar/data!");
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Simpan Item';
                 btn.disabled = false;
@@ -48,12 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// MEMPERBARUI OPTION OTOMATIS BERDASARKAN DATA YANG SUDAH PERNAH DIINPUT
+// Update rekomendasi dropdown Kategori & Mesin secara otomatis
 function updateAutoOptions() {
     const produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
     
-    const kategoriSet = [...new Set(produkList.map(item => item.kategori))];
-    const mesinSet = [...new Set(produkList.map(item => item.mesin))];
+    const kategoriSet = [...new Set(produkList.map(item => item.kategori).filter(Boolean))];
+    const mesinSet = [...new Set(produkList.map(item => item.mesin).filter(Boolean))];
 
     const datalistKat = document.getElementById("list-kategori");
     const datalistMesin = document.getElementById("list-mesin");
@@ -66,6 +69,7 @@ function updateAutoOptions() {
     }
 }
 
+// Fungsi kompres foto agar hemat memori
 function kompresGambar(file, maxWidth, quality) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -90,20 +94,25 @@ function kompresGambar(file, maxWidth, quality) {
                 ctx.drawImage(img, 0, 0, width, height);
                 resolve(canvas.toDataURL("image/jpeg", quality));
             };
+            img.onerror = reject;
         };
+        reader.onerror = reject;
     });
 }
 
+// Tampilkan list barang yang ada di Halaman Admin
 function loadDaftarAdmin() {
     const wrapper = document.getElementById("admin-list-produk");
     if (!wrapper) return;
 
     const produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
-    document.getElementById("total-item").innerText = produkList.length;
+    const totalEl = document.getElementById("total-item");
+    if (totalEl) totalEl.innerText = produkList.length;
+
     wrapper.innerHTML = "";
 
     if (produkList.length === 0) {
-        wrapper.innerHTML = `<p class="text-center text-[10px] font-bold text-[#725e42] py-4">Belum ada data tersimpan.</p>`;
+        wrapper.innerHTML = `<p class="text-center text-[10px] font-bold text-[#725e42] py-4">Belum ada data tersimpan di HP ini.</p>`;
         return;
     }
 
@@ -117,7 +126,7 @@ function loadDaftarAdmin() {
                         <p class="text-[9px] text-[#725e42] font-bold">${item.kategori} · ${item.mesin} · Lvl ${item.level}</p>
                     </div>
                 </div>
-                <button onclick="hapusSatuData(${item.id})" class="text-red-500 hover:text-red-700 p-1">
+                <button onclick="hapusSatuData('${item.id}')" class="text-red-500 hover:text-red-700 p-1">
                     <i class="fa-solid fa-trash text-xs"></i>
                 </button>
             </div>
@@ -128,7 +137,7 @@ function loadDaftarAdmin() {
 function hapusSatuData(id) {
     if (confirm("Hapus item ini?")) {
         let produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
-        produkList = produkList.filter(item => item.id !== id);
+        produkList = produkList.filter(item => String(item.id) !== String(id));
         localStorage.setItem("hayday_products", JSON.stringify(produkList));
         loadDaftarAdmin();
         updateAutoOptions();
