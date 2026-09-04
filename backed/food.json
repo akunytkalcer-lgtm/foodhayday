@@ -1,0 +1,34 @@
+[
+  {
+    "id": "item_001",
+    "name": "Roti (Bread)",
+    "category": "Bakery",
+    "price": 21,
+    "stock": 100,
+    "image": "https://via.placeholder.com/150/FFD700/000000?text=Bread"
+  },
+  {
+    "id": "item_002",
+    "name": "Pancake",
+    "category": "BBQ Grill",
+    "price": 108,
+    "stock": 50,
+    "image": "https://via.placeholder.com/150/FFA500/000000?text=Pancake"
+  },
+  {
+    "id": "item_003",
+    "name": "Kue Wortel (Carrot Cake)",
+    "category": "Cake Oven",
+    "price": 165,
+    "stock": 30,
+    "image": "https://via.placeholder.com/150/FF8C00/000000?text=Carrot+Cake"
+  },
+  {
+    "id": "item_004",
+    "name": "Popcorn",
+    "category": "Popcorn Pot",
+    "price": 32,
+    "stock": 80,
+    "image": "https://via.placeholder.com/150/FFFF00/000000?text=Popcorn"
+  }
+]
