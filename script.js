@@ -1,95 +1,114 @@
-let machines = [];
+// Daftar Produk Food & Item yang dijual
+const products = [
+  { id: 1, name: 'Food / Makanan Ternak', price: 1000, img: '🌾' },
+  { id: 2, name: 'Bahan Bangunan (BOM/SEM)', price: 2000, img: '🪵' },
+  { id: 3, name: 'Alat Tambang (TNT/Dinamit)', price: 1500, img: '💣' },
+  { id: 4, name: 'Kue & Bakery', price: 2500, img: '🍰' },
+  { id: 5, name: 'Gula & Sirup', price: 1800, img: '🍯' },
+  { id: 6, name: 'Paket Kombo Mesin', price: 5000, img: '⚙️' }
+];
 
-const machineForm = document.getElementById('machineForm');
-const machineList = document.getElementById('machineList');
-const totalFoodEl = document.getElementById('totalFood');
-const totalMesinEl = document.getElementById('totalMesin');
-const maxLevelEl = document.getElementById('maxLevel');
+let cart = [];
 
-const modal = document.getElementById('checkoutModal');
-const btnCheckout = document.getElementById('btnCheckout');
-const closeBtn = document.querySelector('.close-btn');
-const checkoutDetails = document.getElementById('checkoutDetails');
-const btnConfirmWa = document.getElementById('btnConfirmWa');
+const productGrid = document.getElementById('productGrid');
+const cartItems = document.getElementById('cartItems');
+const totalPriceEl = document.getElementById('totalPrice');
+const orderForm = document.getElementById('orderForm');
 
-// Tambah Data Mesin
-machineForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = document.getElementById('machineName').value;
-  const level = parseInt(document.getElementById('machineLevel').value);
-
-  machines.push({ name, level });
-  machineForm.reset();
-  updateUI();
-});
-
-// Urutkan A-Z dan Level Bawah ke Tinggi
-function updateUI() {
-  machines.sort((a, b) => {
-    if (a.name.localeCompare(b.name) !== 0) {
-      return a.name.localeCompare(b.name);
-    }
-    return a.level - b.level;
+// Tampilkan Produk ke Tampilan Depan
+function renderProducts() {
+  productGrid.innerHTML = '';
+  products.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <div style="font-size: 40px;">${p.img}</div>
+      <h4>${p.name}</h4>
+      <p class="product-price">Rp ${p.price.toLocaleString('id-ID')} / unit</p>
+      <button class="btn-add" onclick="addToCart(${p.id})">+ Tambah</button>
+    `;
+    productGrid.appendChild(card);
   });
+}
 
-  machineList.innerHTML = '';
-  let maxLvl = 0;
+// Tambah ke Keranjang
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  const existingItem = cart.find(item => item.id === productId);
 
-  machines.forEach((item, index) => {
-    if (item.level > maxLvl) maxLvl = item.level;
+  if (existingItem) {
+    existingItem.qty += 1;
+  } else {
+    cart.push({ ...product, qty: 1 });
+  }
+
+  updateCart();
+}
+
+// Hapus atau Kurangi Item
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  updateCart();
+}
+
+// Update Tampilan Keranjang
+function updateCart() {
+  if (cart.length === 0) {
+    cartItems.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #888;">Keranjang masih kosong. Silakan pilih item di atas.</td></tr>`;
+    totalPriceEl.innerText = 'Rp 0';
+    return;
+  }
+
+  cartItems.innerHTML = '';
+  let total = 0;
+
+  cart.forEach(item => {
+    const itemTotal = item.price * item.qty;
+    total += itemTotal;
 
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${item.name}</td>
-      <td>Lvl ${item.level}</td>
-      <td><button onclick="deleteMachine(${index})" style="color: red; border: none; background: none; cursor: pointer;">Hapus</button></td>
+      <td>${item.qty}x</td>
+      <td>Rp ${itemTotal.toLocaleString('id-ID')}</td>
+      <td><button onclick="removeFromCart(${item.id})" style="color:red; border:none; background:none; cursor:pointer;">❌</button></td>
     `;
-    machineList.appendChild(row);
+    cartItems.appendChild(row);
   });
 
-  // Update Statistik
-  totalMesinEl.innerText = machines.length;
-  totalFoodEl.innerText = machines.length * 10; // Logika kalkulasi food sederhana
-  maxLevelEl.innerText = machines.length > 0 ? `Lvl ${maxLvl}` : 'Lvl 0';
+  totalPriceEl.innerText = `Rp ${total.toLocaleString('id-ID')}`;
 }
 
-function deleteMachine(index) {
-  machines.splice(index, 1);
-  updateUI();
-}
+// Kirim Pesanan ke WA Admin (087888307856)
+orderForm.addEventListener('submit', (e) => {
+  e.preventDefault();
 
-// Tampilan Javascript saat Checkout
-btnCheckout.addEventListener('click', () => {
-  if (machines.length === 0) {
-    alert('Belum ada mesin yang diinput!');
+  if (cart.length === 0) {
+    alert('Keranjang belanja kamu masih kosong!');
     return;
   }
 
-  let html = '<ul>';
-  machines.forEach(m => {
-    html += `<li><strong>${m.name}</strong> - Level ${m.level}</li>`;
+  const name = document.getElementById('buyerName').value;
+  const tag = document.getElementById('buyerTag').value;
+
+  let text = `Halo Admin, saya mau pesan item Hay Day berikut:\n\n`;
+  text += `👤 *Nama:* ${name}\n`;
+  text += `🏷️ *Tag Farm:* ${tag}\n\n`;
+  text += `📦 *Rincian Pesanan:*\n`;
+
+  let total = 0;
+  cart.forEach(item => {
+    const itemTotal = item.price * item.qty;
+    total += itemTotal;
+    text += `- ${item.name} (${item.qty}x) = Rp ${itemTotal.toLocaleString('id-ID')}\n`;
   });
-  html += '</ul>';
-  html += `<br><p><strong>Total Mesin:</strong> ${machines.length}</p>`;
-  html += `<p><strong>Level Tertinggi:</strong> ${maxLevelEl.innerText}</p>`;
 
-  checkoutDetails.innerHTML = html;
-  modal.style.display = 'flex';
-});
-
-closeBtn.addEventListener('click', () => {
-  modal.style.display = 'none';
-});
-
-// Kirim hasil Checkout ke WhatsApp 087888307856
-btnConfirmWa.addEventListener('click', () => {
-  let text = 'Halo, berikut rincian pesanan/cekout mesin saya:\n\n';
-  machines.forEach(m => {
-    text += `- ${m.name} (Level ${m.level})\n`;
-  });
-  text += `\nTotal Mesin: ${machines.length}`;
-  text += `\nLevel Tertinggi: ${maxLevelEl.innerText}`;
+  text += `\n💰 *Total Harga:* Rp ${total.toLocaleString('id-ID')}\n\n`;
+  text += `Mohon direspon ya min, terima kasih!`;
 
   const waUrl = `https://wa.me/6287888307856?text=${encodeURIComponent(text)}`;
   window.open(waUrl, '_blank');
 });
+
+// Jalankan saat pertama kali dibuka
+renderProducts();
