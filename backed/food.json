@@ -1,20 +1,22 @@
 [
   {
     "id": "item_001",
-    "name": "Salad Feta",
+    "nama": "Salad Feta",
     "englishName": "Feta Salad",
-    "category": "Bar Salad",
+    "kategori": "Bar Salad",
+    "mesin": "Bar Salad",
     "level": 58,
-    "price": 200,
-    "image": "https://via.placeholder.com/100"
+    "harga": 200,
+    "gambar": "https://placehold.co/100x100/ded7b8/5c4a38?text=Salad+Feta"
   },
   {
     "id": "item_002",
-    "name": "Salad Kacang",
+    "nama": "Salad Kacang",
     "englishName": "Bean Salad",
-    "category": "Bar Salad",
+    "kategori": "Bar Salad",
+    "mesin": "Bar Salad",
     "level": 58,
-    "price": 220,
-    "image": "https://via.placeholder.com/100"
+    "harga": 220,
+    "gambar": "https://placehold.co/100x100/ded7b8/5c4a38?text=Salad+Kacang"
   }
 ]
