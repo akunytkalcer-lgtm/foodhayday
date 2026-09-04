@@ -1,31 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadDaftarAdmin();
-
-    // HANDLER BANNER TOKO
-    const formBanner = document.getElementById("form-banner");
-    if (formBanner) {
-        formBanner.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const btn = document.getElementById("btn-banner");
-            const file = document.getElementById("banner-file").files[0];
-            if (!file) return;
-
-            btn.innerText = "Memproses...";
-            btn.disabled = true;
-
-            try {
-                const bannerBase64 = await kompresGambar(file, 600, 0.7);
-                localStorage.setItem("hayday_banner", bannerBase64);
-                alert("Banner toko berhasil diperbarui!");
-                this.reset();
-            } catch (error) {
-                alert("Gagal mengolah foto banner!");
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-image mr-1"></i> Simpan Banner Toko';
-                btn.disabled = false;
-            }
-        });
-    }
+    updateAutoOptions();
 
     // HANDLER TAMBAH PRODUK
     const formTambah = document.getElementById("form-tambah");
@@ -36,23 +11,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const fileInput = document.getElementById("gambar-file");
             const file = fileInput.files[0];
 
-            if (!file) {
-                alert("Pilih foto terlebih dahulu!");
-                return;
-            }
+            if (!file) return alert("Pilih foto terlebih dahulu!");
 
             btn.innerText = "Menyimpan...";
             btn.disabled = true;
 
             try {
-                // Kompres foto produk ke max lebar 300px biar ringan banget
                 const gambarBase64 = await kompresGambar(file, 300, 0.7);
 
                 const itemBaru = {
                     id: Date.now(),
                     nama: document.getElementById("nama").value.trim(),
                     kategori: document.getElementById("kategori").value.trim(),
-                    jenis: document.getElementById("jenis").value.trim().toLowerCase(),
+                    mesin: document.getElementById("mesin").value.trim(),
                     level: parseInt(document.getElementById("level").value),
                     harga: parseInt(document.getElementById("harga").value),
                     gambar: gambarBase64
@@ -63,11 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 localStorage.setItem("hayday_products", JSON.stringify(produkList));
                 this.reset();
+                
                 loadDaftarAdmin();
+                updateAutoOptions(); // Perbarui daftar otomatis
                 alert("Item berhasil ditambahkan!");
             } catch (error) {
-                alert("Penyimpanan browser penuh atau file bermasalah!");
-                console.error(error);
+                alert("Gagal menyimpan data!");
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-plus mr-1"></i> Simpan Item';
                 btn.disabled = false;
@@ -76,7 +48,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// FUNGSI UNTUK MERESIZE & KOMPRES GAMBAR OTOMATIS
+// MEMPERBARUI OPTION OTOMATIS BERDASARKAN DATA YANG SUDAH PERNAH DIINPUT
+function updateAutoOptions() {
+    const produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
+    
+    const kategoriSet = [...new Set(produkList.map(item => item.kategori))];
+    const mesinSet = [...new Set(produkList.map(item => item.mesin))];
+
+    const datalistKat = document.getElementById("list-kategori");
+    const datalistMesin = document.getElementById("list-mesin");
+
+    if (datalistKat) {
+        datalistKat.innerHTML = kategoriSet.map(k => `<option value="${k}">`).join("");
+    }
+    if (datalistMesin) {
+        datalistMesin.innerHTML = mesinSet.map(m => `<option value="${m}">`).join("");
+    }
+}
+
 function kompresGambar(file, maxWidth, quality) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -99,13 +88,9 @@ function kompresGambar(file, maxWidth, quality) {
 
                 const ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0, width, height);
-
-                // Export ke Base64 JPG ringan
                 resolve(canvas.toDataURL("image/jpeg", quality));
             };
-            img.onerror = error => reject(error);
         };
-        reader.onerror = error => reject(error);
     });
 }
 
@@ -129,7 +114,7 @@ function loadDaftarAdmin() {
                     <img src="${item.gambar}" class="w-10 h-10 object-cover rounded-lg border border-[#ded7b8]">
                     <div>
                         <h4 class="font-black text-[#5c4a38] text-[11px]">${item.nama}</h4>
-                        <p class="text-[9px] text-[#725e42] font-bold">${item.kategori} (${item.jenis}) · Lvl ${item.level} · Rp ${item.harga.toLocaleString('id-ID')}</p>
+                        <p class="text-[9px] text-[#725e42] font-bold">${item.kategori} · ${item.mesin} · Lvl ${item.level}</p>
                     </div>
                 </div>
                 <button onclick="hapusSatuData(${item.id})" class="text-red-500 hover:text-red-700 p-1">
@@ -146,12 +131,6 @@ function hapusSatuData(id) {
         produkList = produkList.filter(item => item.id !== id);
         localStorage.setItem("hayday_products", JSON.stringify(produkList));
         loadDaftarAdmin();
-    }
-}
-
-function hapusSemuaData() {
-    if (confirm("Yakin ingin menghapus SEMUA data produk?")) {
-        localStorage.removeItem("hayday_products");
-        loadDaftarAdmin();
+        updateAutoOptions();
     }
 }
