@@ -1,118 +1,118 @@
-let products = [];
-let cart = {};
+document.addEventListener("DOMContentLoaded", function () {
+    loadBannerToko();
+    renderKatalog();
 
-async function fetchProducts() {
-  try {
-    const response = await fetch('./backed/food.json');
-    if (!response.ok) throw new Error('File JSON tidak ditemukan');
+    // Event Listener Filter Search
+    document.getElementById("search-input").addEventListener("input", renderKatalog);
+    document.getElementById("select-level").addEventListener("change", renderKatalog);
     
-    products = await response.json();
-    updateStats();
-    renderGroupedProducts();
-  } catch (error) {
-    console.error('Gagal memuat data produk:', error);
-  }
-}
-
-function updateStats() {
-  const categories = new Set(products.map(p => p.category));
-  document.getElementById('total-stats').innerText = `${products.length} food · ${categories.size} mesin`;
-}
-
-function renderGroupedProducts() {
-  const container = document.getElementById('catalog-container');
-  container.innerHTML = '';
-
-  // Kelompokkan produk berdasarkan kategori/mesin
-  const grouped = products.reduce((acc, item) => {
-    acc[item.category] = acc[item.category] || [];
-    acc[item.category].push(item);
-    return acc;
-  }, {});
-
-  for (const [category, items] of Object.entries(grouped)) {
-    const section = document.createElement('section');
-    
-    // Header Kategori
-    section.innerHTML = `
-      <div class="section-header">
-        <h2>${category}</h2>
-        <span>${items.length} food</span>
-      </div>
-    `;
-
-    // Item Card
-    items.forEach(item => {
-      const qty = cart[item.id] || 0;
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-left">
-          <div class="card-img-wrapper">
-            <img src="${item.image}" alt="${item.name}">
-          </div>
-          <div class="card-info">
-            <div class="lvl-badge">Lvl ${item.level || 1}</div>
-            <h3>${item.name}</h3>
-            <div class="sub-title">${item.englishName || item.name}</div>
-          </div>
-        </div>
-        <div class="counter-control">
-          <button class="counter-btn" onclick="changeQty('${item.id}', -1)">-</button>
-          <span class="counter-value" id="qty-${item.id}">${qty}</span>
-          <button class="counter-btn" onclick="changeQty('${item.id}', 1)">+</button>
-        </div>
-      `;
-      section.appendChild(card);
+    // Event Listener Reset
+    document.getElementById("btn-reset").addEventListener("click", function() {
+        document.getElementById("search-input").value = "";
+        document.getElementById("select-level").value = "";
+        window.currentKategori = "Semua";
+        window.isMachineOnly = false;
+        renderKatalog();
     });
 
-    container.appendChild(section);
-  }
-}
+    // Event Listener Tombol Machine
+    document.getElementById("btn-machine").addEventListener("click", function() {
+        window.isMachineOnly = !window.isMachineOnly;
+        this.classList.toggle("active-kat");
+        renderKatalog();
+    });
+});
 
-function changeQty(id, delta) {
-  const current = cart[id] || 0;
-  const updated = current + delta;
-
-  if (updated <= 0) {
-    delete cart[id];
-  } else {
-    cart[id] = updated;
-  }
-
-  // Update angka pada item tersebut
-  const qtyElem = document.getElementById(`qty-${id}`);
-  if (qtyElem) qtyElem.innerText = cart[id] || 0;
-
-  updateCartUI();
-}
-
-function updateCartUI() {
-  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-  document.getElementById('bar-item-count').innerText = `${totalItems} item`;
-}
-
-function checkoutWA() {
-  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-  if (totalItems === 0) {
-    alert('Pilih minimal 1 item makanan terlebih dahulu!');
-    return;
-  }
-
-  const phoneNumber = '6281234567890'; // Ubah dengan nomor WA kamu
-  let message = 'Halo Admin, saya mau pesan item Hay Day berikut:\n\n';
-
-  for (const [id, qty] of Object.entries(cart)) {
-    const item = products.find(p => p.id === id);
-    if (item) {
-      message += `• ${item.name} x${qty}\n`;
+// 1. TAMPILKAN BANNER TOKO
+function loadBannerToko() {
+    const bannerData = localStorage.getItem("hayday_banner");
+    const imgElement = document.getElementById("gambar-toko");
+    if (bannerData && imgElement) {
+        imgElement.src = bannerData;
     }
-  }
-
-  message += `\n*Total Item:* ${totalItems} item`;
-
-  const encodedMessage = encodeURIComponent(message);
-  window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
 }
 
-fetchProducts();
+// 2. RENDER DAFTAR PRODUK & KATEGORI
+window.currentKategori = "Semua";
+window.isMachineOnly = false;
+
+function renderKatalog() {
+    const produkList = JSON.parse(localStorage.getItem("hayday_products")) || [];
+    const wrapper = document.getElementById("produk-wrapper");
+    const searchVal = document.getElementById("search-input").value.toLowerCase();
+    const levelVal = document.getElementById("select-level").value;
+
+    // Render Tombol Kategori Dinamis
+    renderTombolKategori(produkList);
+
+    // Filtering Data
+    let filtered = produkList.filter(item => {
+        const matchSearch = item.nama.toLowerCase().includes(searchVal) || 
+                            (item.mesin && item.mesin.toLowerCase().includes(searchVal));
+        
+        const matchKategori = (window.currentKategori === "Semua") || (item.kategori === window.currentKategori);
+        
+        let matchLevel = true;
+        if (levelVal === "1-10") matchLevel = item.level >= 1 && item.level <= 10;
+        else if (levelVal === "11-30") matchLevel = item.level >= 11 && item.level <= 30;
+        else if (levelVal === "31-50") matchLevel = item.level >= 31 && item.level <= 50;
+        else if (levelVal === "51+") matchLevel = item.level >= 51;
+
+        let matchMachine = true;
+        if (window.isMachineOnly) {
+            matchMachine = item.jenis === "machine" || (item.mesin && item.mesin.toLowerCase().includes("mesin"));
+        }
+
+        return matchSearch && matchKategori && matchLevel && matchMachine;
+    });
+
+    // Update Counter Total
+    const totalFood = filtered.filter(i => i.jenis !== "machine").length;
+    const totalMesin = filtered.filter(i => i.jenis === "machine").length;
+    document.getElementById("total-info").innerText = `${totalFood} food · ${totalMesin} mesin`;
+
+    // Render ke HTML
+    wrapper.innerHTML = "";
+    if (filtered.length === 0) {
+        wrapper.innerHTML = `
+            <div class="col-span-2 text-center py-8 bg-white rounded-2xl border border-[#ded7b8]">
+                <p class="text-xs font-black text-[#725e42] uppercase">Produk Tidak Ditemukan</p>
+            </div>`;
+        return;
+    }
+
+    filtered.forEach(item => {
+        wrapper.innerHTML += `
+            <div class="bg-white rounded-2xl p-2.5 border-2 border-[#ded7b8] shadow-sm flex flex-col justify-between">
+                <div class="relative w-full h-24 rounded-xl overflow-hidden mb-2 bg-[#f9f6ef] border border-[#ded7b8]">
+                    <img src="${item.gambar}" alt="${item.nama}" class="w-full h-full object-cover">
+                    <span class="absolute top-1 right-1 bg-[#ff9800] text-white font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase">Lvl ${item.level}</span>
+                </div>
+                <div>
+                    <h3 class="font-black text-[#5c4a38] text-xs leading-tight mb-0.5">${item.nama}</h3>
+                    <p class="text-[9px] text-[#8c785c] font-bold">${item.kategori} ${item.mesin ? '· ' + item.mesin : ''}</p>
+                </div>
+                <div class="mt-2 pt-1 border-t border-[#f0ead8] flex justify-between items-center">
+                    <span class="text-[10px] font-black text-[#4a8d42]">Rp ${item.harga.toLocaleString('id-ID')}</span>
+                </div>
+            </div>`;
+    });
+}
+
+function renderTombolKategori(produkList) {
+    const katWrapper = document.getElementById("kategori-wrapper");
+    const kategoriSet = ["Semua", ...new Set(produkList.map(item => item.kategori).filter(Boolean))];
+
+    katWrapper.innerHTML = kategoriSet.map(kat => `
+        <button type="button" 
+            onclick="selectKategori('${kat}')" 
+            class="btn-kategori flex-none uppercase ${window.currentKategori === kat ? 'active-kat' : ''}">
+            ${kat}
+        </button>
+    `).join("");
+}
+
+function selectKategori(kat) {
+    window.currentKategori = kat;
+    renderKatalog();
+}
