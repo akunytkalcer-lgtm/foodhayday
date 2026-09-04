@@ -4,7 +4,10 @@ let cart = [];
 // 1. Backend Integration: Mengambil data JSON statis
 async function fetchProducts() {
   try {
-    const response = await fetch('../backend/data/food_items.json');
+    // Diubah menyesuaikan folder 'backed' dan file 'food.json' di GitHub kamu
+    const response = await fetch('./backed/food.json');
+    if (!response.ok) throw new Error('File JSON tidak ditemukan');
+    
     products = await response.json();
     renderProducts();
   } catch (error) {
@@ -47,7 +50,7 @@ function updateCartUI() {
   cartList.innerHTML = '';
   
   let total = 0;
-  cart.forEach((item, index) => {
+  cart.forEach((item) => {
     total += item.price;
     const li = document.createElement('li');
     li.innerText = `${item.name} - ${item.price} Gold`;
@@ -64,7 +67,7 @@ function checkoutWA() {
     return;
   }
 
-  const phoneNumber = '6281234567890'; // Ganti dengan nomor WhatsApp Penjual
+  const phoneNumber = '6281234567890'; // Ubah dengan nomor WhatsApp kamu
   let message = 'Halo Admin, saya ingin membeli item Hay Day Food:\n\n';
   
   let total = 0;
@@ -81,4 +84,3 @@ function checkoutWA() {
 
 // Inisialisasi awal
 fetchProducts();
-
