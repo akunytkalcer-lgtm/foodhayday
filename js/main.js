@@ -1,86 +1,118 @@
 let products = [];
-let cart = [];
+let cart = {};
 
-// 1. Backend Integration: Mengambil data JSON statis
 async function fetchProducts() {
   try {
-    // Diubah menyesuaikan folder 'backed' dan file 'food.json' di GitHub kamu
     const response = await fetch('./backed/food.json');
     if (!response.ok) throw new Error('File JSON tidak ditemukan');
     
     products = await response.json();
-    renderProducts();
+    updateStats();
+    renderGroupedProducts();
   } catch (error) {
     console.error('Gagal memuat data produk:', error);
   }
 }
 
-// 2. Render katalog ke HTML
-function renderProducts() {
-  const container = document.getElementById('product-list');
-  container.innerHTML = '';
-
-  products.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${item.image}" alt="${item.name}">
-      <h3>${item.name}</h3>
-      <p>Kategori: ${item.category}</p>
-      <p>Harga: <strong>${item.price} Gold</strong></p>
-      <button onclick="addToCart('${item.id}')">Tambah ke Keranjang</button>
-    `;
-    container.appendChild(card);
-  });
+function updateStats() {
+  const categories = new Set(products.map(p => p.category));
+  document.getElementById('total-stats').innerText = `${products.length} food · ${categories.size} mesin`;
 }
 
-// 3. Logika Keranjang Belanja
-function addToCart(productId) {
-  const item = products.find(p => p.id === productId);
-  if (item) {
-    cart.push(item);
-    updateCartUI();
+function renderGroupedProducts() {
+  const container = document.getElementById('catalog-container');
+  container.innerHTML = '';
+
+  // Kelompokkan produk berdasarkan kategori/mesin
+  const grouped = products.reduce((acc, item) => {
+    acc[item.category] = acc[item.category] || [];
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
+  for (const [category, items] of Object.entries(grouped)) {
+    const section = document.createElement('section');
+    
+    // Header Kategori
+    section.innerHTML = `
+      <div class="section-header">
+        <h2>${category}</h2>
+        <span>${items.length} food</span>
+      </div>
+    `;
+
+    // Item Card
+    items.forEach(item => {
+      const qty = cart[item.id] || 0;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-left">
+          <div class="card-img-wrapper">
+            <img src="${item.image}" alt="${item.name}">
+          </div>
+          <div class="card-info">
+            <div class="lvl-badge">Lvl ${item.level || 1}</div>
+            <h3>${item.name}</h3>
+            <div class="sub-title">${item.englishName || item.name}</div>
+          </div>
+        </div>
+        <div class="counter-control">
+          <button class="counter-btn" onclick="changeQty('${item.id}', -1)">-</button>
+          <span class="counter-value" id="qty-${item.id}">${qty}</span>
+          <button class="counter-btn" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>
+      `;
+      section.appendChild(card);
+    });
+
+    container.appendChild(section);
   }
+}
+
+function changeQty(id, delta) {
+  const current = cart[id] || 0;
+  const updated = current + delta;
+
+  if (updated <= 0) {
+    delete cart[id];
+  } else {
+    cart[id] = updated;
+  }
+
+  // Update angka pada item tersebut
+  const qtyElem = document.getElementById(`qty-${id}`);
+  if (qtyElem) qtyElem.innerText = cart[id] || 0;
+
+  updateCartUI();
 }
 
 function updateCartUI() {
-  document.getElementById('cart-count').innerText = cart.length;
-  
-  const cartList = document.getElementById('cart-items');
-  cartList.innerHTML = '';
-  
-  let total = 0;
-  cart.forEach((item) => {
-    total += item.price;
-    const li = document.createElement('li');
-    li.innerText = `${item.name} - ${item.price} Gold`;
-    cartList.appendChild(li);
-  });
-
-  document.getElementById('total-price').innerText = total;
+  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+  document.getElementById('bar-item-count').innerText = `${totalItems} item`;
 }
 
-// 4. Sistem Transaksi Tanpa SQL (Checkout Direct ke WhatsApp Admin)
 function checkoutWA() {
-  if (cart.length === 0) {
-    alert('Keranjang kamu masih kosong!');
+  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+  if (totalItems === 0) {
+    alert('Pilih minimal 1 item makanan terlebih dahulu!');
     return;
   }
 
-  const phoneNumber = '6281234567890'; // Ubah dengan nomor WhatsApp kamu
-  let message = 'Halo Admin, saya ingin membeli item Hay Day Food:\n\n';
-  
-  let total = 0;
-  cart.forEach((item, index) => {
-    message += `${index + 1}. ${item.name} - ${item.price} Gold\n`;
-    total += item.price;
-  });
+  const phoneNumber = '6281234567890'; // Ubah dengan nomor WA kamu
+  let message = 'Halo Admin, saya mau pesan item Hay Day berikut:\n\n';
 
-  message += `\n*Total Harga:* ${total} Gold`;
-  
+  for (const [id, qty] of Object.entries(cart)) {
+    const item = products.find(p => p.id === id);
+    if (item) {
+      message += `• ${item.name} x${qty}\n`;
+    }
+  }
+
+  message += `\n*Total Item:* ${totalItems} item`;
+
   const encodedMessage = encodeURIComponent(message);
   window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
 }
 
-// Inisialisasi awal
 fetchProducts();
