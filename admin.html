@@ -21,6 +21,21 @@
             </a>
         </div>
 
+        <!-- FORM GANTI GAMBAR TOKO -->
+        <section class="hayday-section-card space-y-2">
+            <h2 class="font-black text-[#5c4a38] text-xs uppercase border-b border-[#ded7b8] pb-1">Ganti Banner Toko</h2>
+            <form id="form-banner" class="space-y-2 text-[11px]">
+                <div>
+                    <label class="block font-bold text-[#725e42]">Upload Foto Banner</label>
+                    <input type="file" id="banner-file" accept="image/*" required 
+                        class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
+                </div>
+                <button type="submit" class="w-full bg-[#ff9800] text-white font-black py-2 rounded-xl uppercase border-b-2 border-[#d87200] active:translate-y-0.5">
+                    <i class="fa-solid fa-image mr-1"></i> Simpan Banner Toko
+                </button>
+            </form>
+        </section>
+
         <!-- FORM INPUT PRODUK -->
         <section class="hayday-section-card space-y-3">
             <h2 class="font-black text-[#5c4a38] text-xs uppercase border-b border-[#ded7b8] pb-1">Tambah Data Baru</h2>
@@ -36,12 +51,19 @@
                         <label class="block font-bold text-[#725e42]">Kategori</label>
                         <input type="text" id="kategori" placeholder="Contoh: Gula, Roti" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
                     </div>
+                    
+                    <!-- JENIS: DENGAN TOMBOL PILIHAN LANGSUNG (TANPA POP-UP BROWSER) -->
                     <div>
-                        <label class="block font-bold text-[#725e42]">Jenis</label>
-                        <select id="jenis" class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
-                            <option value="food">Food (Makanan/Bahan)</option>
-                            <option value="machine">Machine (Mesin)</option>
-                        </select>
+                        <label class="block font-bold text-[#725e42] mb-1">Jenis</label>
+                        <div class="flex gap-1">
+                            <label class="flex-1 bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl flex items-center justify-center gap-1 cursor-pointer font-bold text-[10px] text-[#5c4a38]">
+                                <input type="radio" name="jenis_radio" value="food" checked onchange="document.getElementById('jenis').value=this.value"> Food
+                            </label>
+                            <label class="flex-1 bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl flex items-center justify-center gap-1 cursor-pointer font-bold text-[10px] text-[#5c4a38]">
+                                <input type="radio" name="jenis_radio" value="machine" onchange="document.getElementById('jenis').value=this.value"> Machine
+                            </label>
+                        </div>
+                        <input type="hidden" id="jenis" value="food">
                     </div>
                 </div>
 
@@ -56,9 +78,11 @@
                     </div>
                 </div>
 
+                <!-- UPLOAD FOTO PRODUK DARI GALERI -->
                 <div>
-                    <label class="block font-bold text-[#725e42]">Link Foto (URL Gambar)</label>
-                    <input type="url" id="gambar" placeholder="https://..." required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                    <label class="block font-bold text-[#725e42]">Upload Foto Produk</label>
+                    <input type="file" id="gambar-file" accept="image/*" required 
+                        class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
                 </div>
 
                 <button type="submit" class="w-full bg-[#6bb962] text-white font-black py-2.5 rounded-xl uppercase border-b-4 border-[#4a8d42] active:translate-y-0.5 mt-2">
@@ -84,4 +108,3 @@
     <script src="js/admin.js"></script>
 </body>
 </html>
-
