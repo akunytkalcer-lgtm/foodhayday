@@ -1,52 +1,92 @@
-<!-- FORM INPUT PRODUK -->
-<section class="hayday-section-card space-y-3">
-    <h2 class="font-black text-[#5c4a38] text-xs uppercase border-b border-[#ded7b8] pb-1">Tambah Data Baru</h2>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Hay Day Food List</title>
     
-    <form id="form-tambah" class="space-y-2 text-[11px]">
-        <div>
-            <label class="block font-bold text-[#725e42]">Nama Item</label>
-            <input type="text" id="nama" placeholder="Contoh: Eskrim Vanilla" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen bg-[#f5f0db] p-4">
+
+    <main class="max-w-md mx-auto space-y-4">
+        
+        <!-- HEADER ADMIN -->
+        <div class="bg-white p-3 rounded-2xl border-2 border-[#ded7b8] flex justify-between items-center shadow-sm">
+            <div>
+                <h1 class="font-black text-[#5c4a38] text-sm uppercase">Admin Panel</h1>
+                <p class="text-[10px] text-[#725e42] font-semibold">Kelola Katalog Produk</p>
+            </div>
+            <a href="index.html" class="bg-[#ff9800] text-white text-[10px] font-black px-3 py-1.5 rounded-xl border-b-2 border-[#e65100] active:translate-y-0.5">
+                <i class="fa-solid fa-store mr-1"></i> Lihat Toko
+            </a>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-            <!-- KATEGORI OTOMATIS (Bisa pilih / ketik baru) -->
-            <div>
-                <label class="block font-bold text-[#725e42]">Kategori</label>
-                <input type="text" id="kategori" list="list-kategori" placeholder="Pilih / ketik baru..." required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
-                <datalist id="list-kategori">
-                    <!-- Otomatis terisi dari JS -->
-                </datalist>
-            </div>
+        <!-- FORM INPUT PRODUK -->
+        <section class="bg-[#fffdf5] p-3 rounded-2xl border-2 border-[#ded7b8] shadow-sm space-y-3">
+            <h2 class="font-black text-[#5c4a38] text-xs uppercase border-b border-[#ded7b8] pb-1">Tambah Data Baru</h2>
+            
+            <form id="form-tambah" class="space-y-2 text-[11px]">
+                <div>
+                    <label class="block font-bold text-[#725e42]">Nama Item</label>
+                    <input type="text" id="nama" placeholder="Contoh: Eskrim Vanilla" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                </div>
 
-            <!-- NAMA MESIN OTOMATIS (Bisa pilih / ketik baru) -->
-            <div>
-                <label class="block font-bold text-[#725e42]">Mesin Pembuat</label>
-                <input type="text" id="mesin" list="list-mesin" placeholder="Pilih / ketik baru..." required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
-                <datalist id="list-mesin">
-                    <!-- Otomatis terisi dari JS -->
-                </datalist>
-            </div>
-        </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-[#725e42]">Kategori</label>
+                        <input type="text" id="kategori" list="list-kategori" placeholder="Pilih / ketik baru..." required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                        <datalist id="list-kategori"></datalist>
+                    </div>
 
-        <div class="grid grid-cols-2 gap-2">
-            <div>
-                <label class="block font-bold text-[#725e42]">Level Minimal</label>
-                <input type="number" id="level" placeholder="1" min="1" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
-            </div>
-            <div>
-                <label class="block font-bold text-[#725e42]">Harga (Rp)</label>
-                <input type="number" id="harga" placeholder="500" min="0" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
-            </div>
-        </div>
+                    <div>
+                        <label class="block font-bold text-[#725e42]">Mesin Pembuat</label>
+                        <input type="text" id="mesin" list="list-mesin" placeholder="Pilih / ketik baru..." required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                        <datalist id="list-mesin"></datalist>
+                    </div>
+                </div>
 
-        <div>
-            <label class="block font-bold text-[#725e42]">Upload Foto Produk</label>
-            <input type="file" id="gambar-file" accept="image/*" required 
-                class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
-        </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-[#725e42]">Level Minimal</label>
+                        <input type="number" id="level" placeholder="1" min="1" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-[#725e42]">Harga (Rp)</label>
+                        <input type="number" id="harga" placeholder="500" min="0" required class="w-full bg-white border-2 border-[#ded7b8] p-2 rounded-xl font-bold text-[#5c4a38] focus:outline-none focus:border-[#ff9800]">
+                    </div>
+                </div>
 
-        <button type="submit" id="btn-simpan" class="w-full bg-[#6bb962] text-white font-black py-2.5 rounded-xl uppercase border-b-4 border-[#4a8d42] active:translate-y-0.5 mt-2">
-            <i class="fa-solid fa-plus mr-1"></i> Simpan Item
-        </button>
-    </form>
-</section>
+                <div>
+                    <label class="block font-bold text-[#725e42]">Upload Foto Produk</label>
+                    <input type="file" id="gambar-file" accept="image/*" required class="w-full bg-white border-2 border-[#ded7b8] p-1.5 rounded-xl font-bold text-[#5c4a38] text-[10px] focus:outline-none focus:border-[#ff9800]">
+                </div>
+
+                <button type="submit" id="btn-simpan" class="w-full bg-[#6bb962] text-white font-black py-2.5 rounded-xl uppercase border-b-4 border-[#4a8d42] active:translate-y-0.5 mt-2">
+                    <i class="fa-solid fa-plus mr-1"></i> Simpan Item
+                </button>
+            </form>
+        </section>
+
+        <!-- DAFTAR ITEM TERSIMPAN -->
+        <section class="bg-[#fffdf5] p-3 rounded-2xl border-2 border-[#ded7b8] shadow-sm space-y-2">
+            <div class="flex justify-between items-center border-b border-[#ded7b8] pb-1">
+                <h2 class="font-black text-[#5c4a38] text-xs uppercase">Daftar Item (<span id="total-item">0</span>)</h2>
+            </div>
+            <div id="admin-list-produk" class="space-y-2 max-h-60 overflow-y-auto pt-1">
+                <!-- List diisi oleh JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
